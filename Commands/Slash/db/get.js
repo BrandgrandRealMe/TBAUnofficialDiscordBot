@@ -37,13 +37,13 @@ async function getTeamRobotImage(team, year, options = {}) {
   let firstImage = null;
   for (const item of mediajson) {
     if (item.type === "image" || item.type === "imgur") {
-      firstImage = item.direct_url;
+      firstImage = `https://i.imgur.com/${item.foreign_key}.png`;
       break;
     }
   }
 
   if (firstImage) {
-    console.log(`Found Image in TBA: ${firstImage}`)
+    console.log(`Found Image in TBA: ${firstImage}`);
     return firstImage;
   } else {
     return null;
@@ -62,7 +62,7 @@ const searchImages = async (searchExpression) => {
   const data = await cloudinary.search
     .expression(`public_id:${searchExpression}`)
     .execute();
-  console.log(data)
+  console.log(data);
   if (data.total_count !== 0) {
     return data.resources[0].url;
   } else {
@@ -105,7 +105,9 @@ export default {
 
     const teaminfo = await tba(team, year);
     const image =
-      await searchImages(`frc${team}-${year}`) || teaminfo.robotImageUrl || `https://res.cloudinary.com/detklnnug/image/upload/v1713904923/firstLogo_k0rlf2.png`;
+      (await searchImages(`frc${team}-${year}`)) ||
+      teaminfo.robotImageUrl ||
+      `https://res.cloudinary.com/detklnnug/image/upload/v1713904923/firstLogo_k0rlf2.png`;
     console.log(`Image URL: ${image}`);
 
     const embed = new EmbedBuilder()
