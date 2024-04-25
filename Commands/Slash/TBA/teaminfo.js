@@ -112,7 +112,7 @@ export default {
         },
       ])
       .setFooter({
-        text: `Team ${team}`,
+        text: `Team ${team}'s info`,
       });
     if (teaminfo.teamLOGO.details) {
       if(!teaminfo.teamLOGO.details.base64Image) return;

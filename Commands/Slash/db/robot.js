@@ -143,7 +143,7 @@ export default {
           `Rookie Year: ${teaminfo.rookie_year}\nSchool: ${teaminfo.school_name}`,
         )
         .setFooter({
-          text: `Team ${team} | Year ${year}`,
+          text: `Team ${team}'s ${year} Robot`,
         })
         .setColor(client.config.embed.color);
       return interaction.editReply({ embeds: [embed] });
