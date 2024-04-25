@@ -26,7 +26,7 @@ export default {
           value: `https://discord.gg/27qSubkcqV`,
         },
         {
-          name: `FRC Scouting & Statagy Server`,
+          name: `FRC Scouting & Strategy Server`,
           value: `https://discord.gg/69RA3ArNA5`,
         }
       ]);
