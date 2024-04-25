@@ -54,7 +54,8 @@
   "dependencies": {
     "cloudinary": "^2.2.0",
     "discord.js": "^14.14.1",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "pagination.djs": "^4.0.14"
   },
   "engines": {
     "node": ">=16"

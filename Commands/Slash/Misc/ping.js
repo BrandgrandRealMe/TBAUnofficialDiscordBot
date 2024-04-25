@@ -12,6 +12,7 @@ export default {
   type: ApplicationCommandType.ChatInput,
 
   run: async ({ client, interaction }) => {
+    console.log(client.config)
     // Code
     await client.sendEmbed(interaction, `🏓 Pong \`${client.ws.ping}\``);
   },
