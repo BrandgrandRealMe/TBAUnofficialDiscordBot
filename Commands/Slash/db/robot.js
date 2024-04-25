@@ -114,6 +114,11 @@ export default {
           description: "The image you want to upload.",
           required: true,
         },
+        {
+          type: 10,
+          name: "year",
+          description: "What year is the robot from?",
+        },
       ],
     },
   ],
@@ -153,7 +158,7 @@ export default {
       await interaction.deferReply();
 
       const team = interaction.options.getNumber("team");
-      const year = date.getFullYear();
+      const year = interaction.options.getNumber("year") || date.getFullYear();
       const ID = `frc${team}-${year}`;
 
       const imageData = interaction.options.getAttachment("image");
