@@ -97,7 +97,7 @@ export default {
     const awards = teaminfo.awards;
 
     
-      pagination.setTitle(`${teaminfo.team_number} | ${teaminfo.nickname}`)
+      pagination.setTitle(`${teaminfo.team_number} | ${teaminfo.nickname}`).setColor(client.config.embed.color)
     if (year) {
       pagination.setFooter({ text: `Team ${team} | Year ${year}` });
     } else {

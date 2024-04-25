@@ -1,4 +1,4 @@
-import { ApplicationCommandType } from "discord.js";
+import { ApplicationCommandType, EmbedBuilder } from "discord.js";
 
 /**
  * @type {import("../../../index").Scommand}
@@ -12,8 +12,11 @@ export default {
   type: ApplicationCommandType.ChatInput,
 
   run: async ({ client, interaction }) => {
-    console.log(client.config)
     // Code
-    await client.sendEmbed(interaction, `🏓 Pong \`${client.ws.ping}\``);
+    const embed = new EmbedBuilder() // Create a new embed object
+      .setColor(client.config.embed.color) // Set the embed color
+      .setDescription(`🏓 Pong \`${client.ws.ping}\` ms`);
+
+    await interaction.reply({ embeds: [embed] }); // Send the embed
   },
 };

@@ -49,7 +49,9 @@ export default {
     const embed = new EmbedBuilder()
       .setDescription(
         `Uploaded Photo!`,
-      );
+      )
+      .setColor(client.config.embed.color);
+
     return interaction.editReply({ embeds: [embed] });
   },
 };

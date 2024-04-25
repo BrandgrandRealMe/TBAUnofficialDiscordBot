@@ -118,7 +118,8 @@ export default {
       )
       .setFooter({
         text: `Team ${team} | Year ${year}`,
-      });
+      })
+      .setColor(client.config.embed.color);
     return interaction.editReply({ embeds: [embed] });
   },
 };
