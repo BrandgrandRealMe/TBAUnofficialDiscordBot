@@ -164,7 +164,7 @@ export default {
       const imageData = interaction.options.getAttachment("image");
 
       const Replyembed = new EmbedBuilder()
-        .setDescription(`Uploaded Photo! Now up for review!`)
+        .setDescription(`Uploaded Photo! Now up for review!\nIf you dont see it uploaded in 24 hours go to the support server and open a support post.\nGet to the support server by doing \`/support\``)
         .setColor(client.config.embed.color);
 
       const Dupeembed = new EmbedBuilder()
@@ -175,14 +175,14 @@ export default {
         .setDescription(`New Photo!`)
         .setImage(imageData.url)
         .setFooter({
-          text: `Team ${team}`,
+          text: `Team ${team} | Year: ${year}`,
         });
 
       const Endembed = new EmbedBuilder()
         .setDescription(`New Photo! CLOSED`)
         .setImage(imageData.url)
         .setFooter({
-          text: `Team ${team}`,
+          text: `Team ${team} | Year: ${year}`,
         })
         .setColor(client.config.embed.color);
 
