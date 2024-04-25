@@ -2,7 +2,7 @@ import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
   EmbedBuilder,
-  Attachment,
+  AttachmentBuilder,
 } from "discord.js";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -38,12 +38,7 @@ async function getTeamLogoImage(team, options = {}) {
   let firstImage = null;
   for (const item of mediajson) {
     if (item.type === "avatar") {
-      if (item.details) {
-        firstImage = `https://res.cloudinary.com/detklnnug/image/upload/v1713990383/FRClogo.jpg`;
-      } else if (item.direct_url) {
-        firstImage = item.direct_url;
-      }
-
+      firstImage = item;
       break;
     }
   }
@@ -92,13 +87,10 @@ export default {
     const motto = teaminfo.motto || "None";
     const location = `Country: ${teaminfo.country || `Not Provided`}\nState: ${teaminfo.state_prov || `Not Provided`}\nCity: ${teaminfo.city || `Not Provided`}\nZIP code: ${teaminfo.postal_code || `Not Provided`}\nSchool: ${teaminfo.school_name || `Not Provided`}`;
     const website = teaminfo.website || "None";
-    const logo =
-      teaminfo.teamLOGO ||
-      `https://res.cloudinary.com/detklnnug/image/upload/v1713904923/firstLogo_k0rlf2.png`;
 
-    const embed = new EmbedBuilder()
+    let attachment = ``;
+    let embed = new EmbedBuilder()
       .setTitle(`${teaminfo.team_number} | ${teaminfo.nickname}`)
-      .setThumbnail(logo)
       .setColor(client.config.embed.color)
       .setDescription(teaminfo.name)
       .addFields([
@@ -122,6 +114,17 @@ export default {
       .setFooter({
         text: `Team ${team}`,
       });
-    return interaction.editReply({ embeds: [embed] });
+    if (teaminfo.teamLOGO.details) {
+      if(!teaminfo.teamLOGO.details.base64Image) return;
+     attachment =  new AttachmentBuilder(Buffer.from(teaminfo.teamLOGO.details.base64Image, 'base64')).setName("img.png");
+      console.log(attachment)
+      embed.setThumbnail(`attachment://${attachment.name}`)
+      console.log(`logo`)
+    } else if (teaminfo.teamLOGO.direct_url) {
+      logo = item.direct_url;
+      embed.setThumbnail(logo)
+    }
+    console.log(embed)
+    return interaction.editReply({ embeds: [embed], files: [attachment] });
   },
 };
