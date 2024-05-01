@@ -92,6 +92,8 @@ export default {
         embed.setThumbnail(logo);
         return interaction.editReply({ embeds: [embed] });
       }
+    } else {
+      return interaction.editReply({ embeds: [embed] });
     }
   },
 };
