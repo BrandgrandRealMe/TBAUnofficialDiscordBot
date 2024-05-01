@@ -1,5 +1,6 @@
 import { ActivityType } from "discord.js";
 import { client } from "../bot.js";
+import { updateStatus } from "../handlers/status.js";
 
 /**
  * Event listener for when the client becomes ready.
@@ -12,10 +13,9 @@ client.on("ready", async () => {
     console.log(`> ✅ ${client.user.tag} is now online`);
 
     // Set the activity for the client
-    client.user.setActivity({
-      name: `and staring at your robot!`, // Set the activity name
-      type: ActivityType.Watching, // Set the activity type
-    });
+    updateStatus()
+    setInterval(updateStatus, 15 * 1000);
+    
   } catch (error) {
     // Log any errors that occur
     console.error("An error occurred in the ready event:", error);

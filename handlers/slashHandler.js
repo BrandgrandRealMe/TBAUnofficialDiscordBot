@@ -25,6 +25,7 @@ export default async function loadSlashCommands(client) {
               /**
                * @type {import("../index.js").Scommand}
                */
+              if (dir === `CMDPackages` || dir === `DisabledCMDs`) return;
               const command = await import(
                 `../Commands/Slash/${dir}/${cmd}`
               ).then((r) => r.default);

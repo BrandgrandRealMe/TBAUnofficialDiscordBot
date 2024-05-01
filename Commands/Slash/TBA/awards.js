@@ -6,10 +6,7 @@ import {
 } from "discord.js";
 import { v2 as cloudinary } from "cloudinary";
 import { Pagination } from "pagination.djs";
-
-
-
-const baseUrl = "https://www.thebluealliance.com/api/v3";
+import { TBAaddToken, teamInfo, teamAwards } from "../CMDPackages/tba.js";
 
 cloudinary.config({
   cloud_name: "detklnnug",
@@ -17,43 +14,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARYTOKEN,
 });
 
-async function getTeamInfo(team, year, options = {}) {
-  const url = `${baseUrl}/team/frc${team}`;
-  console.log(url);
-  options.headers = {
-    "X-TBA-Auth-Key": process.env.TBATOKEN, // Replace with your TBA API key
-  };
-
-  return await fetch(url, options)
-    .then((response) => response.json())
-    .then((data) => data);
-}
-
-
-async function getTeamAwards(team, year, options = {}) {
-  let url = "";
-  if (year) {
-    url = `${baseUrl}/team/frc${team}/awards/${year}`;
-  } else {
-    url = `${baseUrl}/team/frc${team}/awards`;
-  }
-  
-  console.log(url);
-  options.headers = {
-    "X-TBA-Auth-Key": process.env.TBATOKEN, // Replace with your TBA API key
-  };
-
-  return await fetch(url, options)
-    .then((response) => response.json())
-    .then((data) => data);
-}
+TBAaddToken(process.env.TBATOKEN);
 
 async function tba(teamNumber, year) {
-  const teamData = await getTeamInfo(teamNumber);
+  const teamData = await teamInfo(teamNumber);
   console.log(teamData)
   return {
     ...teamData,
-    awards: await getTeamAwards(teamNumber, year),
+    awards: await teamAwards(teamNumber, year),
   };
 }
 

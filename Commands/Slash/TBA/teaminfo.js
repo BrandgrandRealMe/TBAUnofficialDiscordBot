@@ -4,9 +4,11 @@ import {
   EmbedBuilder,
   AttachmentBuilder,
 } from "discord.js";
+
+import { TBAaddToken, teamInfo, teamLogo } from "frctbaapi";
 import { v2 as cloudinary } from "cloudinary";
 
-const baseUrl = "https://www.thebluealliance.com/api/v3";
+TBAaddToken(process.env.TBATOKEN);
 
 cloudinary.config({
   cloud_name: "detklnnug",
@@ -14,48 +16,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARYTOKEN,
 });
 
-async function getTeamInfo(team, year, options = {}) {
-  const url = `${baseUrl}/team/frc${team}`;
-  options.headers = {
-    "X-TBA-Auth-Key": process.env.TBATOKEN, // Replace with your TBA API key
-  };
-
-  return await fetch(url, options)
-    .then((response) => response.json())
-    .then((data) => data);
-}
-
-async function getTeamLogoImage(team, options = {}) {
-  const date = new Date();
-  const year = date.getFullYear();
-  const url = `${baseUrl}/team/frc${team}/media/${year}`;
-  options.headers = {
-    "X-TBA-Auth-Key": process.env.TBATOKEN, // Replace with your TBA API key
-  };
-
-  const mediadata = await fetch(url, options);
-  const mediajson = await mediadata.json();
-  let firstImage = null;
-  for (const item of mediajson) {
-    if (item.type === "avatar") {
-      firstImage = item;
-      break;
-    }
-  }
-
-  if (firstImage) {
-    return firstImage;
-  } else {
-    return null;
-  }
-}
 
 async function tba(teamNumber) {
-  const teamData = await getTeamInfo(teamNumber);
+  const teamData = await teamInfo(teamNumber);
   console.log(teamData);
   return {
     ...teamData,
-    teamLOGO: await getTeamLogoImage(teamNumber),
+    teamLOGO: await teamLogo(teamNumber),
   };
 }
 
@@ -85,7 +52,7 @@ export default {
 
     const rookieyear = `${teaminfo.rookie_year}` || "None";
     const motto = teaminfo.motto || "None";
-    const location = `Country: ${teaminfo.country || `Not Provided`}\nState: ${teaminfo.state_prov || `Not Provided`}\nCity: ${teaminfo.city || `Not Provided`}\nZIP code: ${teaminfo.postal_code || `Not Provided`}\nSchool: ${teaminfo.school_name || `Not Provided`}`;
+    const location = `**Country**: ${teaminfo.country || `Not Provided`}\n**State**: ${teaminfo.state_prov || `Not Provided`}\n**City**: ${teaminfo.city || `Not Provided`}\n**ZIP code**: ${teaminfo.postal_code || `Not Provided`}\n**School**: ${teaminfo.school_name || `Not Provided`}`;
     const website = teaminfo.website || "None";
 
     let attachment = ``;
