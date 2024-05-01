@@ -79,15 +79,17 @@ export default {
       .setFooter({
         text: `Team ${team}'s info`,
       });
-    if (teaminfo.teamLOGO.details) {
-      if (!teaminfo.teamLOGO.details.base64Image) return;
-      attachment = new AttachmentBuilder(
-        Buffer.from(teaminfo.teamLOGO.details.base64Image, "base64"),
-      ).setName("img.png");
-      embed.setThumbnail(`attachment://${attachment.name}`);
-    } else if (teaminfo.teamLOGO.direct_url) {
-      logo = item.direct_url;
-      embed.setThumbnail(logo);
+    if (teaminfo.teamLOGO) {
+      if (teaminfo.teamLOGO.details) {
+        if (!teaminfo.teamLOGO.details.base64Image) return;
+        attachment = new AttachmentBuilder(
+          Buffer.from(teaminfo.teamLOGO.details.base64Image, "base64"),
+        ).setName("img.png");
+        embed.setThumbnail(`attachment://${attachment.name}`);
+      } else if (teaminfo.teamLOGO.direct_url) {
+        logo = item.direct_url;
+        embed.setThumbnail(logo);
+      }
     }
     return interaction.editReply({ embeds: [embed], files: [attachment] });
   },
