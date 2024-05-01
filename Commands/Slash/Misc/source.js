@@ -15,7 +15,7 @@ export default {
     // Code
     const embed = new EmbedBuilder() // Create a new embed object
       .setColor(client.config.embed.color) // Set the embed color
-      .setDescription(`https://github.com/BrandgrandRealMe/FRCTBAAPI`)
+      .setDescription(`https://github.com/BrandgrandRealMe/TBAUnofficialDiscordBot`)
       .setTitle(`Here is the bots source code!`)
 
     await interaction.reply({ embeds: [embed] }); // Send the embed

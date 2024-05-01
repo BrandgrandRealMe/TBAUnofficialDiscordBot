@@ -1,5 +1,5 @@
 import { ApplicationCommandType, EmbedBuilder } from "discord.js";
-import { TBAaddToken, matchInfo } from "../CMDPackages/tba.js";
+import { TBAaddToken, matchInfo } from "frctbaapi";
 
 TBAaddToken(process.env.TBATOKEN);
 

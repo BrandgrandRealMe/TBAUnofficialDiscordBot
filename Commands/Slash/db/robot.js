@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import { v2 as cloudinary } from "cloudinary";
 
-import { TBAaddToken, teamInfo, teamRobotImage } from "../CMDPackages/tba.js";
+import { TBAaddToken, teamInfo, teamRobotImage } from "frctbaapi";
 
 
 TBAaddToken(process.env.TBATOKEN);
@@ -179,7 +179,6 @@ export default {
             },
           ],
         });
-      const filter = (click) => console.log(click);
       const collector = msg.createMessageComponentCollector({
         componentType: ComponentType.Button,
         time: 86400000,

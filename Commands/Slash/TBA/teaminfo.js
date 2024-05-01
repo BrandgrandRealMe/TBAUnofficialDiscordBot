@@ -5,7 +5,7 @@ import {
   AttachmentBuilder,
 } from "discord.js";
 
-import { TBAaddToken, teamInfo, teamLogo } from "../CMDPackages/tba.js";
+import { TBAaddToken, teamInfo, teamLogo } from "frctbaapi";
 import { v2 as cloudinary } from "cloudinary";
 
 TBAaddToken(process.env.TBATOKEN);
@@ -16,10 +16,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARYTOKEN,
 });
 
-
 async function tba(teamNumber) {
   const teamData = await teamInfo(teamNumber);
-  console.log(teamData);
   return {
     ...teamData,
     teamLOGO: await teamLogo(teamNumber),
@@ -82,16 +80,15 @@ export default {
         text: `Team ${team}'s info`,
       });
     if (teaminfo.teamLOGO.details) {
-      if(!teaminfo.teamLOGO.details.base64Image) return;
-     attachment =  new AttachmentBuilder(Buffer.from(teaminfo.teamLOGO.details.base64Image, 'base64')).setName("img.png");
-      console.log(attachment)
-      embed.setThumbnail(`attachment://${attachment.name}`)
-      console.log(`logo`)
+      if (!teaminfo.teamLOGO.details.base64Image) return;
+      attachment = new AttachmentBuilder(
+        Buffer.from(teaminfo.teamLOGO.details.base64Image, "base64"),
+      ).setName("img.png");
+      embed.setThumbnail(`attachment://${attachment.name}`);
     } else if (teaminfo.teamLOGO.direct_url) {
       logo = item.direct_url;
-      embed.setThumbnail(logo)
+      embed.setThumbnail(logo);
     }
-    console.log(embed)
     return interaction.editReply({ embeds: [embed], files: [attachment] });
   },
 };

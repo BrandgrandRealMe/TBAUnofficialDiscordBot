@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import { v2 as cloudinary } from "cloudinary";
 import { Pagination } from "pagination.djs";
-import { TBAaddToken, teamInfo, teamAwards } from "../CMDPackages/tba.js";
+import { TBAaddToken, teamInfo, teamAwards } from "frctbaapi";
 
 cloudinary.config({
   cloud_name: "detklnnug",

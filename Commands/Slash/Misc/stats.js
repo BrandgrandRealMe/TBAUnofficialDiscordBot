@@ -12,8 +12,12 @@ export default {
   type: ApplicationCommandType.ChatInput,
 
   run: async ({ client, interaction }) => {
+    const guilds = await client.guilds.fetch();
+    const servers = guilds.size;
+    
     const client_id = client.user.id;
     const invite = `https://discord.com/oauth2/authorize?client_id=${client_id}&permissions=68608&scope=bot+applications.commands`;
+    
 
     const embed = new EmbedBuilder() // Create a new embed object
       .setColor(client.config.embed.color) // Set the embed color
@@ -35,12 +39,7 @@ export default {
         },
         {
           name: `Servers:`,
-          value: `${client.guilds.cache.size}`,
-          inline: true,
-        },
-        {
-          name: `Users:`,
-          value: `${client.users.cache.size}`,
+          value: `${servers}`,
           inline: true,
         },
         {
