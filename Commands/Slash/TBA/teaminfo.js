@@ -5,7 +5,7 @@ import {
   AttachmentBuilder,
 } from "discord.js";
 
-import { TBAaddToken, teamInfo, teamLogo } from "frctbaapi";
+import { TBAaddToken, teamInfo, teamLogo } from "../CMDPackages/tba.js";
 import { v2 as cloudinary } from "cloudinary";
 
 TBAaddToken(process.env.TBATOKEN);
