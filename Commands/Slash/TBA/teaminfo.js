@@ -86,11 +86,12 @@ export default {
           Buffer.from(teaminfo.teamLOGO.details.base64Image, "base64"),
         ).setName("img.png");
         embed.setThumbnail(`attachment://${attachment.name}`);
+        return interaction.editReply({ embeds: [embed], files: [attachment] });
       } else if (teaminfo.teamLOGO.direct_url) {
         logo = item.direct_url;
         embed.setThumbnail(logo);
+        return interaction.editReply({ embeds: [embed] });
       }
     }
-    return interaction.editReply({ embeds: [embed], files: [attachment] });
   },
 };
