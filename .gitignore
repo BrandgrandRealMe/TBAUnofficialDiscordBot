@@ -7,3 +7,4 @@ run.bat
 .replit
 replit.nix
 settings
+db.json

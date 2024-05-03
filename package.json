@@ -57,7 +57,9 @@
     "dotenv": "^16.4.5",
     "esm": "^3.2.25",
     "frctbaapi": "^0.0.7",
-    "pagination.djs": "^4.0.14"
+    "lowdb": "^7.0.1",
+    "pagination.djs": "^4.0.14",
+    "sagdb": "^2.3.0"
   },
   "engines": {
     "node": ">=16"

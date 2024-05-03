@@ -6,6 +6,11 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import settings from "../settings/config.js";
+import { JSONFilePreset } from 'lowdb/node';
+
+const defaultData = { tags: [] }
+const db = await JSONFilePreset('db.json', defaultData)
+
 
 /**
  * Custom client class extending Discord.js Client.
@@ -41,6 +46,7 @@ export class Bot extends Client {
 
     // Set global variables
     this.config = settings;
+    this.db = db;
     this.scommands = new Collection();
     this.mcommands = new Collection();
     this.cooldowns = new Collection();
