@@ -15,19 +15,21 @@ export default {
     const { tags } = db.data
     if (args[0] === "add") {
       if (userID !== client.config.Dev.ID) return;
-      const tagName = args[1];
-      if (!tagName) return await client.sendEmbed(message, `No tagName - Usage: \`${client.config.PREFIX}tag add <tagName> <tagDescription>\``);
-      const tagDescription = args.slice(1).join(" ");
+      const tagName = args[1].toLowerCase();
+      if (!tagName) return await client.sendEmbed(message, `Usage: \`${client.config.PREFIX}tag add <tagName> <tagDescription>\``);
+      const tagDescription = args.slice(2).join(" ");
       if (!tagDescription) return await client.sendEmbed(message, `Usage: \`${client.config.PREFIX}tag add <tagName> <tagDescription>\``);
-      const tag = {tag: tagName, description: tagDescription }
-      await db.update(({ tags }) => tags.push(tag))
+      const tag = tags.find((tag) => tag.tag === tagName);
+      if (tag) return await client.sendEmbed(message, `Error: Tag \`${tagName}\` already exists.`);
+      const tagData = {tag: tagName, description: tagDescription }
+      await db.update(({ tags }) => tags.push(tagData))
       console.log(`Added tag to db`)
-      await client.sendEmbed(message, `Added tag: ${tagName} - ${tagDescription}`);
+      await client.sendEmbed(message, `Added tag: \`${tagName}\` - ${tagDescription}`);
       
     } else if (args[0] === "remove") {
       if (userID !== client.config.Dev.ID) return;
       return client.sendEmbed(message, `Tags have to be removed manually untill further notice.`);
-      const tagName = args[1];
+      const tagName = args[1].toLowerCase();
       if (!tagName) return await client.sendEmbed(message, `Usage: \`${client.config.PREFIX}tag remove <tagName>\``);
       const tag = tags.find((tag) => tag.tag === tagName);
       if (!tag) return await client.sendEmbed(message, `Tag: ${tagName} not found.`);
@@ -50,12 +52,12 @@ export default {
 
       return pagination.render();
     } else {
-      const tagName = args[0];
+      const tagName = args[0].toLowerCase();
       if (!tagName) return await client.sendEmbed(message, `Usage: \`${client.config.PREFIX}tag <tagName>\``);
       const tag = tags.find((tag) => tag.tag === tagName);
-      console.log(tag)
-      if (!tag) return await client.sendEmbed(message, `Tag: ${tagName} not found.`);
-      await client.sendEmbed(message, `Tag: ${tag.tag}\nDescription: ${tag.description}`);
+
+      if (!tag) return await client.sendEmbed(message, `Tag: \`${tagName}\` not found.`);
+      await client.sendEmbed(message, `**${tag.tag}**\n${tag.description}`);
     }
   },
 };
