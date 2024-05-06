@@ -12,6 +12,7 @@ export default async function loadSlashCommands(client) {
 
   try {
     let allCommands = [];
+    let betaCommands = [];
     const commandsDir = await readdir(`./Commands/Slash`);
 
     await Promise.all(
@@ -26,6 +27,17 @@ export default async function loadSlashCommands(client) {
                * @type {import("../index.js").Scommand}
                */
               if (dir === `CMDPackages` || dir === `DisabledCMDs`) return;
+              if (dir === `BetaCMDs`) {
+                const command = await import(
+                  `../Commands/Slash/${dir}/${cmd}`
+                ).then((r) => r.default);
+
+                if (command.name) {
+                  client.scommands.set(command.name, command);
+                  betaCommands.push(command);
+                }
+                return
+              }
               const command = await import(
                 `../Commands/Slash/${dir}/${cmd}`
               ).then((r) => r.default);
@@ -46,6 +58,8 @@ export default async function loadSlashCommands(client) {
     await client.on("ready", async () => {
       if (Global) {
         client.application.commands.set(allCommands);
+        const guild = client.guilds.cache.get(GuildID);
+        if (guild) await guild.commands.set(betaCommands);
       } else {
         const guild = client.guilds.cache.get(GuildID);
         if (guild) await guild.commands.set(allCommands);

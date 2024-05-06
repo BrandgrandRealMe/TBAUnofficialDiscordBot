@@ -90,6 +90,9 @@ export default {
   ],
 
   run: async ({ client, interaction }) => {
+    const muser = interaction.member; // For upload
+    const user = interaction.user; // For Upload
+    
     if (!interaction.options.getSubcommand()) return;
     const option = interaction.options.getSubcommand();
     if (option == `get`) {
@@ -119,6 +122,7 @@ export default {
         .setColor(client.config.embed.color);
       return interaction.editReply({ embeds: [embed] });
     } else if (option == `upload`) {
+      let uploaded = false;
       const date = new Date();
 
       await interaction.deferReply();
@@ -130,7 +134,7 @@ export default {
       const imageData = interaction.options.getAttachment("image");
 
       const Replyembed = new EmbedBuilder()
-        .setDescription(`Uploaded Photo! Now up for review!\nIf you dont see it uploaded in 24 hours go to the support server and open a support post.\nGet to the support server by doing \`/support\``)
+        .setDescription(`Uploaded Photo! Now up for review!\nIf you dont see it uploaded in 24 hours go to the support server and open a support post.\nGet to the support server by doing \`/support\`\n**DO NOT UPLOAD MORE THEN ONCE**`)
         .setColor(client.config.embed.color);
 
       const Dupeembed = new EmbedBuilder()
@@ -140,17 +144,61 @@ export default {
       const Reviewembed = new EmbedBuilder()
         .setDescription(`New Photo!`)
         .setImage(imageData.url)
-        .setFooter({
-          text: `Team ${team} | Year: ${year}`,
+        .setColor(client.config.embed.color)
+        .setFields([
+          {
+            name: `Team:`,
+            value: `${team}`,
+            inline: true,
+          },
+          {
+            name: `Year:`,
+            value: `${year}`,
+            inline: true,
+          },
+          {
+            name: `Uploader ID:`,
+            value: `${user.id}`,
+            inline: true,
+          },
+          {
+            name: `Uploader Username:`,
+            value: `${user.username}`,
+            inline: true,
+          }
+        ])
+        .setTimestamp()
+        Endembed.setFooter({
+          text: `Submitted at`,
         });
 
       const Endembed = new EmbedBuilder()
         .setDescription(`New Photo! CLOSED`)
         .setImage(imageData.url)
-        .setFooter({
-          text: `Team ${team} | Year: ${year}`,
-        })
-        .setColor(client.config.embed.color);
+        .setColor(client.config.embed.color)
+        .setFields([
+          {
+            name: `Team:`,
+            value: `${team}`,
+            inline: true,
+          },
+          {
+            name: `Year:`,
+            value: `${year}`,
+            inline: true,
+          },
+          {
+            name: `Uploader ID:`,
+            value: `${user.id}`,
+            inline: true,
+          },
+          {
+            name: `Uploader Username:`,
+            value: `${user.username}`,
+            inline: true,
+          }
+        ])
+        .setTimestamp();
 
       if (await searchImages(`frc${team}-${year}`)) {
         return interaction.editReply({ embeds: [Dupeembed] });
@@ -175,6 +223,14 @@ export default {
                   // that the user has clicked this specific button
                   custom_id: `accept_${ID}`,
                 },
+                {
+                  type: 2,
+                  style: 4,
+                  label: "Decline",
+                  // Our button id, we can use that later to identify,
+                  // that the user has clicked this specific button
+                  custom_id: `decline_${ID}`,
+                },
               ],
             },
           ],
@@ -192,8 +248,18 @@ export default {
           i.member.roles.cache.has(`1228029387233038356`) ||
           i.member.roles.cache.has(`1228029254172934214`)
         ) {
+          if (i.customId === `decline_${ID}`) {
+            Endembed.setFooter({
+              text: `Declined | Submitted at`,
+            })
+            i.reply("Declined. Team: " + team + " | Year: " + year);
+            return;
+          }
           if (i.customId !== `accept_${ID}`) return;
           const URL = imageData.url;
+          Endembed.setFooter({
+            text: `Uploaded! | Submitted at`,
+          })
           i.reply("Uploaded! Team: " + team + " | Year: " + year);
           cloudinary.uploader.upload(
             URL,
@@ -219,12 +285,21 @@ export default {
               components: [
                 {
                   type: 2,
-                  style: 4,
+                  style: 1,
                   disabled: true,
                   label: "Accept",
                   // Our button id, we can use that later to identify,
                   // that the user has clicked this specific button
                   custom_id: `accept_${ID}`,
+                },
+                {
+                  type: 2,
+                  style: 4,
+                  disabled: true,
+                  label: "Decline",
+                  // Our button id, we can use that later to identify,
+                  // that the user has clicked this specific button
+                  custom_id: `decline_${ID}`,
                 },
               ],
             },
