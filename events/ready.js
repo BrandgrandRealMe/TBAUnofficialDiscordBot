@@ -2,7 +2,7 @@ import { ActivityType } from "discord.js";
 import { client } from "../bot.js";
 import { updateStatus } from "../handlers/status.js";
 import settings from "../settings/config.js";
-const { AutoPoster } = require("topgg-autoposter");
+import { AutoPoster } from "topgg-autoposter";
 
 /**
  * Event listener for when the client becomes ready.
