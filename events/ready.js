@@ -1,6 +1,8 @@
 import { ActivityType } from "discord.js";
 import { client } from "../bot.js";
 import { updateStatus } from "../handlers/status.js";
+import settings from "../settings/config.js";
+import DBL from "top.gg";
 
 /**
  * Event listener for when the client becomes ready.
@@ -8,6 +10,17 @@ import { updateStatus } from "../handlers/status.js";
  * @event client#ready
  */
 client.on("ready", async () => {
+  const dbl = new DBL(settings.topgg.token, client);
+
+  dbl.on('posted', () => {
+    console.log('top.gg | Update | Server count posted!');
+  })
+  
+  dbl.on('error', e => {
+   console.log(`top.gg | error | ${e}`);
+  })
+
+  
   try {
     // Log a message indicating that the client is ready
     console.log(`> ✅ ${client.user.tag} is now online`);

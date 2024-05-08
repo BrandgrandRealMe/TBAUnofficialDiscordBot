@@ -59,7 +59,8 @@
     "frctbaapi": "^0.0.9",
     "lowdb": "^7.0.1",
     "pagination.djs": "^4.0.14",
-    "sagdb": "^2.3.0"
+    "sagdb": "^2.3.0",
+    "top.gg": "^2.3.2"
   },
   "engines": {
     "node": ">=16"
