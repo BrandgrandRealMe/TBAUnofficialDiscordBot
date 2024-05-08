@@ -2,7 +2,7 @@ import { ActivityType } from "discord.js";
 import { client } from "../bot.js";
 import { updateStatus } from "../handlers/status.js";
 import settings from "../settings/config.js";
-import DBL from "top.gg";
+const { AutoPoster } = require("topgg-autoposter");
 
 /**
  * Event listener for when the client becomes ready.
@@ -10,25 +10,23 @@ import DBL from "top.gg";
  * @event client#ready
  */
 client.on("ready", async () => {
-  const dbl = new DBL(settings.topgg.token, client);
+  const ap = AutoPoster(settings.topgg.token, client);
 
-  dbl.on('posted', () => {
-    console.log('top.gg | Update | Server count posted!');
-  })
-  
-  dbl.on('error', e => {
-   console.log(`top.gg | error | ${e}`);
-  })
+  ap.on("posted", () => {
+    console.log("top.gg | Update | Posted stats");
+  });
 
-  
+  ap.on("error", (e) => {
+    console.log(`top.gg | error | ${e}`);
+  });
+
   try {
     // Log a message indicating that the client is ready
     console.log(`> ✅ ${client.user.tag} is now online`);
 
     // Set the activity for the client
-    updateStatus()
+    updateStatus();
     setInterval(updateStatus, 15 * 1000);
-    
   } catch (error) {
     // Log any errors that occur
     console.error("An error occurred in the ready event:", error);
