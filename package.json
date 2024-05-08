@@ -56,7 +56,7 @@
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "esm": "^3.2.25",
-    "frctbaapi": "^0.0.7",
+    "frctbaapi": "^0.0.9",
     "lowdb": "^7.0.1",
     "pagination.djs": "^4.0.14",
     "sagdb": "^2.3.0"
