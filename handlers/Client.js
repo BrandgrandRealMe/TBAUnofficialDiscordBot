@@ -7,9 +7,13 @@ import {
 } from "discord.js";
 import settings from "../settings/config.js";
 import { JSONFilePreset } from 'lowdb/node';
+import Topgg from "@top-gg/sdk";
 
 const defaultData = { tags: [] }
 const db = await JSONFilePreset('db.json', defaultData)
+
+const topgg = new Topgg.Api(settings.topgg.token);
+
 
 
 /**
@@ -47,6 +51,7 @@ export class Bot extends Client {
     // Set global variables
     this.config = settings;
     this.db = db;
+    this.topgg = topgg;
     this.scommands = new Collection();
     this.mcommands = new Collection();
     this.cooldowns = new Collection();

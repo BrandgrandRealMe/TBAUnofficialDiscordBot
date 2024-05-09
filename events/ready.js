@@ -10,16 +10,18 @@ import { AutoPoster } from "topgg-autoposter";
  * @event client#ready
  */
 client.on("ready", async () => {
-  const ap = AutoPoster(settings.topgg.token, client);
+  if (!settings.BETA) {
+    const ap = AutoPoster(settings.topgg.token, client);
 
-  ap.on("posted", () => {
-    console.log("top.gg | Update | Posted stats");
-  });
+    ap.on("posted", () => {
+      console.log("top.gg | Update | Posted stats");
+    });
 
-  ap.on("error", (e) => {
-    console.log(`top.gg | error | ${e}`);
-  });
-
+    ap.on("error", (e) => {
+      console.log(`top.gg | error | ${e}`);
+    });
+  }
+  
   try {
     // Log a message indicating that the client is ready
     console.log(`> ✅ ${client.user.tag} is now online`);
