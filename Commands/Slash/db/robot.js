@@ -29,7 +29,6 @@ const searchImages = async (searchExpression) => {
   const data = await cloudinary.search
     .expression(`public_id:${searchExpression}`)
     .execute();
-  console.log(data);
   if (data.total_count !== 0) {
     return data.resources[0].url;
   } else {
@@ -87,6 +86,24 @@ export default {
         },
       ],
     },
+    {
+      type: 1,
+      name: "remove",
+      description: "Remove an robot picture from the DB.",
+      options: [
+        {
+          type: 10,
+          name: "team",
+          description: "What teams robot would you like to remove from the DB?",
+          required: true,
+        },
+        {
+          type: 10,
+          name: "year",
+          description: "What is the year of the robot would you like to remove from the DB?",
+        },
+      ],
+    },
   ],
 
   run: async ({ client, interaction }) => {
@@ -101,15 +118,21 @@ export default {
 
       const team = interaction.options.getNumber("team");
       const year = interaction.options.getNumber("year") || date.getFullYear();
-      console.log(year);
 
       const teaminfo = await tba(team, year);
-      const image =
-        (await searchImages(`frc${team}-${year}`)) ||
-        teaminfo.robotImageUrl ||
-        `https://res.cloudinary.com/detklnnug/image/upload/v1713904923/firstLogo_k0rlf2.png`;
-      console.log(`Image URL: ${image}`);
-
+      let image = null;
+      let Source = null;
+      if (await searchImages(`frc${team}-${year}`)) {
+        image = await searchImages(`frc${team}-${year}`);
+        Source = "DB";
+      } else if (teaminfo.robotImageUrl) {
+        image = teaminfo.robotImageUrl;
+        Source = "TBA";
+      } else {
+        image = `https://res.cloudinary.com/detklnnug/image/upload/v1713904923/firstLogo_k0rlf2.png`;
+        Source = "None";
+      };
+      
       const embed = new EmbedBuilder()
         .setTitle(`${teaminfo.team_number} | ${teaminfo.nickname}`)
         .setImage(image)
@@ -117,7 +140,7 @@ export default {
           `Rookie Year: ${teaminfo.rookie_year}\nSchool: ${teaminfo.school_name}`,
         )
         .setFooter({
-          text: `Team ${team}'s ${year} Robot`,
+          text: `Team ${team}'s ${year} Robot | Source: ${Source}`,
         })
         .setColor(client.config.embed.color);
       return interaction.editReply({ embeds: [embed] });
@@ -168,9 +191,6 @@ export default {
           }
         ])
         .setTimestamp()
-        Endembed.setFooter({
-          text: `Submitted at`,
-        });
 
       const Endembed = new EmbedBuilder()
         .setDescription(`New Photo! CLOSED`)
@@ -198,7 +218,10 @@ export default {
             inline: true,
           }
         ])
-        .setTimestamp();
+        .setTimestamp()
+      .setFooter({
+        text: `Submitted at`,
+      });
 
       if (await searchImages(`frc${team}-${year}`)) {
         return interaction.editReply({ embeds: [Dupeembed] });
@@ -221,7 +244,7 @@ export default {
                   label: "Accept",
                   // Our button id, we can use that later to identify,
                   // that the user has clicked this specific button
-                  custom_id: `accept_${ID}`,
+                  custom_id: `upload_accept_${ID}`,
                 },
                 {
                   type: 2,
@@ -229,7 +252,7 @@ export default {
                   label: "Decline",
                   // Our button id, we can use that later to identify,
                   // that the user has clicked this specific button
-                  custom_id: `decline_${ID}`,
+                  custom_id: `upload_decline_${ID}`,
                 },
               ],
             },
@@ -242,20 +265,19 @@ export default {
       });
 
       collector.on("collect", (i) => {
-        console.log(i.member.roles);
         if (
           i.member.roles.cache.has(`1228029338792890379`) ||
           i.member.roles.cache.has(`1228029387233038356`) ||
           i.member.roles.cache.has(`1228029254172934214`)
         ) {
-          if (i.customId === `decline_${ID}`) {
+          if (i.customId === `upload_decline_${ID}`) {
             Endembed.setFooter({
               text: `Declined | Submitted at`,
             })
             i.reply("Declined. Team: " + team + " | Year: " + year);
             return;
           }
-          if (i.customId !== `accept_${ID}`) return;
+          if (i.customId !== `upload_accept_${ID}`) return;
           const URL = imageData.url;
           Endembed.setFooter({
             text: `Uploaded! | Submitted at`,
@@ -265,7 +287,6 @@ export default {
             URL,
             { public_id: ID, tags: ID },
             function (error, result) {
-              console.log(result);
             },
           );
         } else {
@@ -290,7 +311,7 @@ export default {
                   label: "Accept",
                   // Our button id, we can use that later to identify,
                   // that the user has clicked this specific button
-                  custom_id: `accept_${ID}`,
+                  custom_id: `upload_accept_${ID}`,
                 },
                 {
                   type: 2,
@@ -299,13 +320,196 @@ export default {
                   label: "Decline",
                   // Our button id, we can use that later to identify,
                   // that the user has clicked this specific button
-                  custom_id: `decline_${ID}`,
+                  custom_id: `upload_decline_${ID}`,
                 },
               ],
             },
           ],
         });
       });
+    } else if (option == `remove`) {
+      let uploaded = true;
+      const date = new Date();
+
+      await interaction.deferReply();
+
+      const team = interaction.options.getNumber("team");
+      const year = interaction.options.getNumber("year") || date.getFullYear();
+      const ID = `frc${team}-${year}`;
+
+      const image = await searchImages(`frc${team}-${year}`);
+
+      const NotFoundembed = new EmbedBuilder()
+        .setDescription(`Image not in DB!`)
+        .setColor(client.config.embed.color);
+
+      const Replyembed = new EmbedBuilder()
+      .setDescription(`Image removal request now up for review!\nIf you dont see it removed in 24 hours go to the support server and open a support post.\nGet to the support server by doing \`/support\`\n**DO NOT REQUEST MORE THEN ONCE**`)
+      .setColor(client.config.embed.color);
+
+      const Reviewembed = new EmbedBuilder()
+        .setDescription(`New Photo Removal request!`)
+        .setImage(image)
+        .setColor(client.config.embed.color)
+        .setFields([
+          {
+            name: `Team:`,
+            value: `${team}`,
+            inline: true,
+          },
+          {
+            name: `Year:`,
+            value: `${year}`,
+            inline: true,
+          },
+          {
+            name: `Uploader ID:`,
+            value: `${user.id}`,
+            inline: true,
+          },
+          {
+            name: `Uploader Username:`,
+            value: `${user.username}`,
+            inline: true,
+          }
+        ])
+        .setTimestamp()
+
+      const Endembed = new EmbedBuilder()
+        .setDescription(`New Photo Removal request! CLOSED`)
+        .setImage(image)
+        .setColor(client.config.embed.color)
+        .setFields([
+          {
+            name: `Team:`,
+            value: `${team}`,
+            inline: true,
+          },
+          {
+            name: `Year:`,
+            value: `${year}`,
+            inline: true,
+          },
+          {
+            name: `Uploader ID:`,
+            value: `${user.id}`,
+            inline: true,
+          },
+          {
+            name: `Uploader Username:`,
+            value: `${user.username}`,
+            inline: true,
+          }
+        ])
+        .setTimestamp()
+        .setFooter({
+          text: `Submitted at`,
+        });
+
+      if (!image) {
+        return interaction.editReply({ embeds: [NotFoundembed] });
+      }
+      
+      const msg = await client.channels.cache
+      .get(client.config.reviewChannel.channelID)
+      .send({
+        content: `<@&1228029338792890379><@&1228029387233038356><@&1228029254172934214>`,
+        embeds: [Reviewembed],
+        components: [
+          {
+            type: 1,
+            components: [
+              {
+                type: 2,
+                style: 1,
+                label: "Accept",
+                // Our button id, we can use that later to identify,
+                // that the user has clicked this specific button
+                custom_id: `removal_accept_${ID}`,
+              },
+              {
+                type: 2,
+                style: 4,
+                label: "Decline",
+                // Our button id, we can use that later to identify,
+                // that the user has clicked this specific button
+                custom_id: `removal_decline_${ID}`,
+              },
+            ],
+          },
+        ],
+      });
+
+      const rcollector = msg.createMessageComponentCollector({
+        componentType: ComponentType.Button,
+        time: 86400000,
+        max: 1,
+      });
+
+      rcollector.on("collect", (i) => {
+        if (
+          i.member.roles.cache.has(`1228029338792890379`) ||
+          i.member.roles.cache.has(`1228029387233038356`) ||
+          i.member.roles.cache.has(`1228029254172934214`)
+        ) {
+          if (i.customId === `removal_decline_${ID}`) {
+            Endembed.setFooter({
+              text: `Declined | Submitted at`,
+            })
+            i.reply("Removal Declined. Team: " + team + " | Year: " + year);
+            return;
+          }
+          if (i.customId !== `removal_accept_${ID}`) return;
+          const ImageID = `frc${team}-${year}`;
+          Endembed.setFooter({
+            text: `Removed! | Submitted at`,
+          })
+          i.reply("Removed! Team: " + team + " | Year: " + year);
+          cloudinary.uploader
+          .destroy(ImageID);
+        } else {
+          i.reply({
+            content: `These buttons aren't for you!`,
+            ephemeral: true,
+          });
+        }
+      });
+      rcollector.on("end", (collected) => {
+        msg.edit({
+          content: `<@&1228029338792890379><@&1228029387233038356><@&1228029254172934214>`,
+          embeds: [Endembed],
+          components: [
+            {
+              type: 1,
+              components: [
+                {
+                  type: 2,
+                  style: 1,
+                  disabled: true,
+                  label: "Accept",
+                  // Our button id, we can use that later to identify,
+                  // that the user has clicked this specific button
+                  custom_id: `removal_accept_${ID}`,
+                },
+                {
+                  type: 2,
+                  style: 4,
+                  disabled: true,
+                  label: "Decline",
+                  // Our button id, we can use that later to identify,
+                  // that the user has clicked this specific button
+                  custom_id: `removal_decline_${ID}`,
+                },
+              ],
+            },
+          ],
+        });
+      });
+
+
+
+      interaction.editReply({ embeds: [Replyembed] });
+      
     }
   },
 };
