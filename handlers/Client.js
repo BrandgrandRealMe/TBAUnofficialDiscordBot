@@ -52,6 +52,7 @@ export class Bot extends Client {
     this.config = settings;
     this.db = db;
     this.topgg = topgg;
+    this.urls = settings.urls;
     this.scommands = new Collection();
     this.mcommands = new Collection();
     this.cooldowns = new Collection();

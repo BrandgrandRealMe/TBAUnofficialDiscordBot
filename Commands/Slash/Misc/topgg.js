@@ -1,8 +1,22 @@
 import { ApplicationCommandType, EmbedBuilder } from "discord.js";
 import { Pagination } from "pagination.djs";
-/**
- * @type {import("../../../index").Scommand}
- */
+
+function countUsernames(users) {
+  const userCount = users.reduce((acc, user) => {
+    const username = user.username;
+    if (!acc[username]) {
+      acc[username] = { user, amount: 0 };
+    }
+    acc[username].amount++;
+    return acc;
+  }, {});
+
+  const result = Object.values(userCount);
+  return result;
+}
+
+
+
 export default {
   name: "topgg",
   description: "Get info from the bots topgg.",
@@ -70,18 +84,22 @@ export default {
       await interaction.reply({ embeds: [embed] });
     } else if (option === "voters") {
       const votersData = await client.topgg.getVotes();
+      
+      const voters = countUsernames(votersData);
+
+      console.log(voters)
       const votersAmount = votersData.length;
 
       const pagination = new Pagination(interaction);
 
       pagination.setTitle(`List of voters:`).setColor(client.config.embed.color).setFooter({ text: `Total votes: ${votersAmount}` });
 
-      if (votersData.length > 0) {
-        const votersList = votersData.map((voter) => {
+      if (voters.length > 0) {
+        const votersList = voters.map((voter) => {
           
           return {
-            name: `${voter.username}`,
-            value: `ID: ${voter.id} | Mention: <@${voter.id}>`
+            name: `${voter.user.username} x${voter.amount}`,
+            value: `ID: ${voter.user.id} | Mention: <@${voter.user.id}>`
           };
         });
 
