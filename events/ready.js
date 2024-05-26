@@ -3,15 +3,31 @@ import { client } from "../bot.js";
 import { updateStatus } from "../handlers/status.js";
 import settings from "../settings/config.js";
 import { AutoPoster } from "topgg-autoposter";
+import { createDjsClient } from "discordbotlist";
 
 /**
  * Event listener for when the client becomes ready.
  * This event is emitted once the bot has successfully connected to Discord and is ready to start receiving events.
  * @event client#ready
  */
+
+export function DBL() { // Default export (always available)
+    const dbl = createDjsClient(settings.DBL.token, client);
+    dbl.startPosting();
+    return dbl;
+}
+
+
 client.on("ready", async () => {
   if (!settings.BETA) {
     const ap = AutoPoster(settings.topgg.token, client);
+    const maybeDbl = initDBL(); // Call the default export
+    if (maybeDbl) {
+      console.log("DBL client initialized successfully");
+      // Use maybeDbl here (assuming it's not null)
+    } else {
+      console.log("DBL client disabled in BETA mode");
+    }
 
     ap.on("posted", () => {
       console.log("top.gg | Update | Posted stats");

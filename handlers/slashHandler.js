@@ -1,5 +1,7 @@
 import { Bot } from "./Client.js";
+import { DBL } from "../events/ready.js";
 import { readdir } from "node:fs/promises";
+import settings from "../settings/config.js";
 
 /**
  * Loads slash commands for the client and registers them globally or in a specific guild.
@@ -36,7 +38,7 @@ export default async function loadSlashCommands(client) {
                   client.scommands.set(command.name, command);
                   betaCommands.push(command);
                 }
-                return
+                return;
               }
               const command = await import(
                 `../Commands/Slash/${dir}/${cmd}`
@@ -49,13 +51,17 @@ export default async function loadSlashCommands(client) {
             } catch (error) {
               console.error(`Error loading command from file ${cmd}:`, error);
             }
-          })
+          }),
         );
-      })
+      }),
     );
 
     // Register commands globally or in a specific guild
     await client.on("ready", async () => {
+      if (!settings.BETA) {
+        console.log("DBL | Update | Uploaded Slash Commands");
+        DBL.postBotCommands(allCommands);
+      }
       if (Global) {
         client.application.commands.set(allCommands);
         const guild = client.guilds.cache.get(GuildID);
@@ -67,12 +73,12 @@ export default async function loadSlashCommands(client) {
     });
 
     console.log(
-      `> ✅ Successfully loaded ${client.scommands.size} slash commands.`
+      `> ✅ Successfully loaded ${client.scommands.size} slash commands.`,
     );
   } catch (error) {
     console.error(
       "An error occurred while reading the commands directory:",
-      error
+      error,
     );
   }
 }
