@@ -1,7 +1,7 @@
 import { Bot } from "./Client.js";
-import { DBL } from "../events/ready.js";
 import { readdir } from "node:fs/promises";
 import settings from "../settings/config.js";
+import { createDjsClient } from "discordbotlist";
 
 /**
  * Loads slash commands for the client and registers them globally or in a specific guild.
@@ -59,8 +59,9 @@ export default async function loadSlashCommands(client) {
     // Register commands globally or in a specific guild
     await client.on("ready", async () => {
       if (!settings.BETA) {
+        const dbl = createDjsClient(settings.DBL.token, client);
+        dbl.startPosting();
         console.log("DBL | Update | Uploaded Slash Commands");
-        DBL.postBotCommands(allCommands);
       }
       if (Global) {
         client.application.commands.set(allCommands);

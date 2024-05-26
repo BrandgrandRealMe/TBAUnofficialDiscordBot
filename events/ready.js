@@ -11,17 +11,11 @@ import { createDjsClient } from "discordbotlist";
  * @event client#ready
  */
 
-export function DBL() { // Default export (always available)
-    const dbl = createDjsClient(settings.DBL.token, client);
-    dbl.startPosting();
-    return dbl;
-}
-
-
 client.on("ready", async () => {
   if (!settings.BETA) {
     const ap = AutoPoster(settings.topgg.token, client);
-    const maybeDbl = initDBL(); // Call the default export
+    const dbl = createDjsClient(settings.DBL.token, client);
+    dbl.startPosting();
     if (maybeDbl) {
       console.log("DBL client initialized successfully");
       // Use maybeDbl here (assuming it's not null)
