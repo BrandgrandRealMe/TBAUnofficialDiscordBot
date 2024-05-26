@@ -16,7 +16,7 @@ export default {
     const servers = guilds.size;
     
     const client_id = client.user.id;
-    const invite = `https://discord.com/oauth2/authorize?client_id=${client_id}&permissions=68608&scope=bot+applications.commands`;
+    const invite = client.urls.invite;
     
 
     const embed = new EmbedBuilder() // Create a new embed object
