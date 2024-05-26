@@ -16,12 +16,6 @@ client.on("ready", async () => {
     const ap = AutoPoster(settings.topgg.token, client);
     const dbl = createDjsClient(settings.DBL.token, client);
     dbl.startPosting();
-    if (maybeDbl) {
-      console.log("DBL client initialized successfully");
-      // Use maybeDbl here (assuming it's not null)
-    } else {
-      console.log("DBL client disabled in BETA mode");
-    }
 
     ap.on("posted", () => {
       console.log("top.gg | Update | Posted stats");
