@@ -61,6 +61,7 @@ export default async function loadSlashCommands(client) {
       if (!settings.BETA) {
         const dbl = createDjsClient(settings.DBL.token, client);
         dbl.startPosting();
+        dbl.postBotCommands(allCommands)
         console.log("DBL | Update | Uploaded Slash Commands");
       }
       if (Global) {

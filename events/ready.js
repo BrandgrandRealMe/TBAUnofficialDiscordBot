@@ -14,8 +14,6 @@ import { createDjsClient } from "discordbotlist";
 client.on("ready", async () => {
   if (!settings.BETA) {
     const ap = AutoPoster(settings.topgg.token, client);
-    const dbl = createDjsClient(settings.DBL.token, client);
-    dbl.startPosting();
 
     ap.on("posted", () => {
       console.log("top.gg | Update | Posted stats");
@@ -25,7 +23,7 @@ client.on("ready", async () => {
       console.log(`top.gg | error | ${e}`);
     });
   }
-  
+
   try {
     // Log a message indicating that the client is ready
     console.log(`> ✅ ${client.user.tag} is now online`);
