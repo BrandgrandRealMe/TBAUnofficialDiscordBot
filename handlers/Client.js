@@ -6,15 +6,13 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import settings from "../settings/config.js";
-import { JSONFilePreset } from 'lowdb/node';
+import { JSONFilePreset } from "lowdb/node";
 import Topgg from "@top-gg/sdk";
 
-const defaultData = { tags: [] }
-const db = await JSONFilePreset('db.json', defaultData)
+const defaultData = { tags: [] };
+const db = await JSONFilePreset("db.json", defaultData);
 
 const topgg = new Topgg.Api(settings.topgg.token);
-
-
 
 /**
  * Custom client class extending Discord.js Client.
@@ -25,18 +23,12 @@ export class Bot extends Client {
    */
   constructor() {
     super({
-      partials: [
-        Partials.Channel,
-        Partials.GuildMember,
-        Partials.Message,
-        Partials.User,
-      ],
+      partials: [Partials.Channel, Partials.Message, Partials.User],
       intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildMembers,
       ],
       shards: "auto",
       failIfNotExists: false,
