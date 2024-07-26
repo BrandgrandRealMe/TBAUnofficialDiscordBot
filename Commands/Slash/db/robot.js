@@ -232,7 +232,7 @@ export default {
       const msg = await client.channels.cache
         .get(client.config.reviewChannel.channelID)
         .send({
-          content: `<@&1228029338792890379><@&1228029387233038356><@&1228029254172934214>`,
+          content: `<@&1266460794456117248> <@&1266439910953320621> <@&1266439910953320620> <@&1266439910953320619>`,
           embeds: [Reviewembed],
           components: [
             {
@@ -266,9 +266,10 @@ export default {
 
       collector.on("collect", (i) => {
         if (
-          i.member.roles.cache.has(`1228029338792890379`) ||
-          i.member.roles.cache.has(`1228029387233038356`) ||
-          i.member.roles.cache.has(`1228029254172934214`)
+          i.member.roles.cache.has(`1266460794456117248`) ||
+          i.member.roles.cache.has(`1266439910953320621`) ||
+          i.member.roles.cache.has(`1266439910953320620`) ||
+          i.member.roles.cache.has(`1266439910953320619`)
         ) {
           if (i.customId === `upload_decline_${ID}`) {
             Endembed.setFooter({
