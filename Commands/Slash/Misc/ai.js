@@ -15,10 +15,11 @@ async function GetAnswer(q) {
       "Content-Type": "application/json",
     },
   })
-  .then((response) => response.json())
-  .then((data) => data);
+    .then((response) => response.json())
+    .then((data) => data);
   if (data.answer) return data.answer;
-  
+  if (data.message) return "error " + data.message;
+  if (!data.answer) return "error";
 }
 export default {
   name: "ai",
