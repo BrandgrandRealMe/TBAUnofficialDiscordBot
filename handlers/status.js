@@ -1,6 +1,6 @@
 import { ActivityType } from "discord.js";
 import { client } from "../bot.js";
-import settings from "./settings/config.js";
+import settings from "../settings/config.js";
 
 const statuses = [
   { text: "and staring at your robot!", type: ActivityType.Watching },
