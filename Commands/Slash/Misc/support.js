@@ -13,6 +13,6 @@ export default {
 
   run: async ({ client, interaction }) => {
     // Code
-    await interaction.reply({ content: `https://discord.gg/27qSubkcqV` }); // Send the embed
+    await interaction.reply({ content: `https://discord.gg/rwzyj5AWpJ` }); // Send the embed
   },
 };
