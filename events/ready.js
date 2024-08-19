@@ -4,6 +4,7 @@ import { updateStatus } from "../handlers/status.js";
 import settings from "../settings/config.js";
 import { AutoPoster } from "topgg-autoposter";
 import { createDjsClient } from "discordbotlist";
+import server from '../handlers/ExpressServer.js';
 
 /**
  * Event listener for when the client becomes ready.
@@ -12,6 +13,7 @@ import { createDjsClient } from "discordbotlist";
  */
 
 client.on("ready", async () => {
+
   if (!settings.BETA) {
     const ap = AutoPoster(settings.topgg.token, client);
 
