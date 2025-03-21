@@ -14,18 +14,16 @@ export default {
     if (args.length === 0) return;
     const { tags } = db.data
     if (args[0] === "add") {
+      if (!args[1] || !args[2]) return await client.sendEmbed(message, `Usage: \`${client.config.PREFIX}tag add <tagName> <tagDescription>\``);
       if (userID !== client.config.Dev.ID) return;
       const tagName = args[1].toLowerCase();
-      if (!tagName) return await client.sendEmbed(message, `Usage: \`${client.config.PREFIX}tag add <tagName> <tagDescription>\``);
       const tagDescription = args.slice(2).join(" ");
-      if (!tagDescription) return await client.sendEmbed(message, `Usage: \`${client.config.PREFIX}tag add <tagName> <tagDescription>\``);
       const tag = tags.find((tag) => tag.tag === tagName);
       if (tag) return await client.sendEmbed(message, `Error: Tag \`${tagName}\` already exists.`);
       const tagData = {tag: tagName, description: tagDescription }
       await db.update(({ tags }) => tags.push(tagData))
       console.log(`Added tag to db`)
       await client.sendEmbed(message, `Added tag: \`${tagName}\` - ${tagDescription}`);
-      
     } else if (args[0] === "remove") {
       if (userID !== client.config.Dev.ID) return;
       return client.sendEmbed(message, `Tags have to be removed manually untill further notice.`);

@@ -9,7 +9,6 @@ export default {
   userPermissions: ["SendMessages"],
   botPermissions: ["SendMessages", "EmbedLinks"],
   category: "TBA",
-  type: ApplicationCommandType.ChatInput,
   options: [
     {
       name: "matchkey",
@@ -29,6 +28,7 @@ export default {
     const MatchInfodata = await matchInfo(
       interaction.options.getString("matchkey"),
     );
+    console.log(MatchInfodata)
     if (MatchInfodata.Error) {
       client.sendEmbed(interaction, MatchInfodata.Error);
       return;
@@ -50,7 +50,9 @@ export default {
       .setTitle(`Match Info Simple`)
       .setColor(client.config.embed.color)
       .setDescription(
-        `Event: ${MatchInfodata.event_key} Match: ${MatchInfodata.comp_level}${MatchInfodata.match_number}\nWinner: ${MatchInfodata.winning_alliance}`,
+        `**Event:** ${MatchInfodata.event_key}\n` +
+        `**Match:** ${MatchInfodata.comp_level.toUpperCase()} ${MatchInfodata.match_number}\n` +
+        `**Winner:** ${MatchInfodata.winning_alliance.toUpperCase()} Alliance`
       )
       .setFields([
         {
@@ -63,21 +65,39 @@ export default {
         },
       ]);
 
-    const ComplexembedFirst = new EmbedBuilder()
+      const ComplexembedFirst = new EmbedBuilder()
       .setTitle(`Match Info Complex`)
       .setColor(client.config.embed.color)
       .setDescription(
-        `Event: ${MatchInfodata.event_key} Match: ${MatchInfodata.comp_level}${MatchInfodata.match_number}\nWinner: ${MatchInfodata.winning_alliance}`,
+        `**Event:** ${MatchInfodata.event_key}\n` +
+        `**Match:** ${MatchInfodata.comp_level.toUpperCase()} ${MatchInfodata.match_number}\n` +
+        `**Winner:** ${MatchInfodata.winning_alliance.toUpperCase()} Alliance`
       )
       .setFields([
         {
           name: `🔵 Blue Alliance`,
-          value: `Final Score: ${MatchInfodata.alliances.blue.score}`,
+          value:
+            `**Final Score:** ${MatchInfodata.alliances.blue.score}\n` +
+            `**Teams:** ${MatchInfodata.alliances.blue.team_keys.join(", ")}\n` +
+            `**Surrogate Teams:** ${MatchInfodata.alliances.blue.surrogate_team_keys.join(", ") || "None"}\n` +
+            `**Disqualified Teams:** ${MatchInfodata.alliances.blue.dq_team_keys.join(", ") || "None"}\n` +
+            `**Auto Points:** ${MatchInfodata.score_breakdown.blue.autoPoints}\n` +
+            `**Teleop Points:** ${MatchInfodata.score_breakdown.blue.teleopPoints}\n` +
+            `**Foul Points:** ${MatchInfodata.score_breakdown.blue.foulPoints}\n` +
+            `**Total Points:** ${MatchInfodata.score_breakdown.blue.totalPoints}`,
         },
         {
           name: `🔴 Red Alliance`,
-          value: `Final Score: ${MatchInfodata.alliances.red.score}`,
-        },
+          value:
+            `**Final Score:** ${MatchInfodata.alliances.red.score}\n` +
+            `**Teams:** ${MatchInfodata.alliances.red.team_keys.join(", ")}\n` +
+            `**Surrogate Teams:** ${MatchInfodata.alliances.red.surrogate_team_keys.join(", ") || "None"}\n` +
+            `**Disqualified Teams:** ${MatchInfodata.alliances.red.dq_team_keys.join(", ") || "None"}\n` +
+            `**Auto Points:** ${MatchInfodata.score_breakdown.red.autoPoints}\n` +
+            `**Teleop Points:** ${MatchInfodata.score_breakdown.red.teleopPoints}\n` +
+            `**Foul Points:** ${MatchInfodata.score_breakdown.red.foulPoints}\n` +
+            `**Total Points:** ${MatchInfodata.score_breakdown.red.totalPoints}`,
+        }
       ]);
     if (simple) {
       return interaction.editReply({ embeds: [Simpleembed] });

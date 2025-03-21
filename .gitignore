@@ -5,8 +5,7 @@ package-lock.json
 node_modules
 .config
 run.bat
-.replit
-replit.nix
-settings
+config.js
 db.json
 temp
+.vscode

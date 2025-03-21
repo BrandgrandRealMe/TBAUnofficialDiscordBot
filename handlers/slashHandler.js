@@ -64,14 +64,9 @@ export default async function loadSlashCommands(client) {
         dbl.postBotCommands(allCommands)
         console.log("DBL | Update | Uploaded Slash Commands");
       }
-      if (Global) {
         client.application.commands.set(allCommands);
         const guild = client.guilds.cache.get(GuildID);
         if (guild) await guild.commands.set(betaCommands);
-      } else {
-        const guild = client.guilds.cache.get(GuildID);
-        if (guild) await guild.commands.set(allCommands);
-      }
     });
 
     console.log(

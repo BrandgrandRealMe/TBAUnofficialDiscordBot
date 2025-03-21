@@ -1,0 +1,45 @@
+const config = {
+    TOKEN: process.env.TOKEN,
+    BETA: true,
+    PORT: XXXX,
+    VER: X.X,
+    PREFIX: ";",
+    Slash: {
+        Global: false,
+        GuildID: xxxxxx,
+      },
+    Dev: {
+        ID: "xxxx",
+        name: "BrandgrandReal",
+    },
+    embed: {
+        color: 16766720,
+    },
+    emoji: {
+        success: "✅"
+    },
+    urls: {
+        website: "https://tbaunofficial.brandgrand.rocks/",
+        invite: "https://discord.com/oauth2/authorize?client_id=1232768387399024732&permissions=379968&scope=bot+applications.commands",
+        support: "https://discord.gg/rwzyj5AWpJ",
+        source: "https://github.com/BrandgrandRealMe/TBAUnofficialDiscordBot",
+        vote: {
+            topgg: "https://top.gg/bot/1232768387399024732",
+            discordbotlist: "https://discordbotlist.com/bots/tbaunofficial",
+        },
+        donate: "https://ko-fi.com/brandonthedev",
+        donatealt: "https://liberapay.com/BrandonTheDev/"
+    },
+    topgg: {
+        token: "xxxxx",
+        url: "https://top.gg/bot/1232768387399024732"
+    },
+    DBL: {
+        token: "xxxxxx"
+    },
+    reviewChannel: {
+        channelID: 1266466972405862471
+    },
+};
+
+export default config;
