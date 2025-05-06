@@ -286,7 +286,7 @@ export default {
           i.reply("Uploaded! Team: " + team + " | Year: " + year);
           cloudinary.uploader.upload(
             URL,
-            { public_id: ID, tags: ID },
+            { public_id: ID, tags: [ID, "robots"] },
             function (error, result) {
             },
           );
